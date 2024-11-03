@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Flask App Button Example</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    // Get User Info button click
+    $("#getUserButton").click(function(){
+        var userId = $("#userIdInput").val();
+        $.ajax({
+            url: "/getuser/" + userId,
+            type: "GET",
+            success: function(response){
+                $("#userInfo").html("User ID: " + response.user_id + "<br>Name: " + response.name + "<br>Email: " + response.email);
+            },
+            error: function(xhr){
+                $("#userInfo").html("Error: " + xhr.responseText);
+            }
+        });
+    });
+
+    // Add User button click
+    $("#addUserButton").click(function(){
+        var userId = $("#newUserId").val();
+        var userName = $("#newUserName").val();
+        var userEmail = $("#newUserEmail").val();
+        $.ajax({
+            url: "/create-user",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ user_id: userId, name: userName, email: userEmail }),
+            success: function(response){
+                $("#addUserInfo").html("User added: <br>ID: " + userId + "<br>Name: " + userName + "<br>Email: " + userEmail);
+            },
+            error: function(xhr){
+                $("#addUserInfo").html("Error adding user: " + xhr.responseText);
+            }
+        });
+    });
+});
+</script>
+</head>
+<body>
+    <h1>Flask App</h1>
+    
+    <h2>Get User Info</h2>
+    <input type="text" id="userIdInput" placeholder="Enter user ID">
+    <button id="getUserButton">Get User Info</button>
+    <div id="userInfo"></div>
+    
+    <h2>Add User</h2>
+    <input type="text" id="newUserId" placeholder="Enter new user ID">
+    <input type="text" id="newUserName" placeholder="Enter new user's name">
+    <input type="text" id="newUserEmail" placeholder="Enter new user's email">
+    <button id="addUserButton">Add User</button>
+    <div id="addUserInfo"></div>
+</body>
+</html>
